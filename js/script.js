@@ -1,5 +1,11 @@
 'use strict';
 
+const templates = {
+  articleLink: Handlebars.compile(document.querySelector('#template-article-link').innerHTML),
+  articleTagsLink: Handlebars.compile(document.querySelector('#template-article-tags-link').innerHTML),
+  authorLink: Handlebars.compile(document.querySelector('#template-author-link').innerHTML)
+};
+
 const opts = {
   ArticleSelector: '.post',
   TitleSelector: '.post-title',
@@ -75,7 +81,10 @@ function generateTitleLinks(customSelector = ''){
     const articleTitle = article.querySelector(opts.TitleSelector).innerHTML;
 
     /* create HTML of the link */
-    const linkHTML = '<li><a href="#' + articleId + '"><span>' + articleTitle + '</span></a></li>';
+    //const linkHTML = '<li><a href="#' + articleId + '"><span>' + articleTitle + '</span></a></li>';
+    // this code we replace this code when applying the Handlebars template
+    const linkHTMLData = {id: articleId, title: articleTitle};
+    const linkHTML = templates.articleLink(linkHTMLData);
     console.log(linkHTML);
 
     /* [done] insert link into titleList */
@@ -159,7 +168,9 @@ function generateTags(){
       console.log(tag);
 
       /* [DONE] generate HTML of the link */
-      const linkHTML = '<li><a href="#tag-' + tag + '">' + tag + '</a></li>';
+      //const linkHTML = '<li><a href="#tag-' + tag + '">' + tag + '</a></li>';
+      const linkHTMLData = {id: tag, title: tag};
+      const linkHTML = templates.articleTagsLink(linkHTMLData);
       console.log(linkHTML);
 
       /* [DONE] add generated code to html variable */
@@ -279,8 +290,9 @@ function generateAuthors() {
     console.log(articleAuthor);
 
     /* [DONE] generate HTML of the link */
-    const linkHTML = '<li><a href="#author-' + articleAuthor + '"><span>by ' + articleAuthor + '</span></a></li>';
-
+    //const linkHTML = '<li><a href="#author-' + articleAuthor + '"><span>by ' + articleAuthor + '</span></a></li>';
+    const linkHTMLData = {id: authorWrapper, title: articleAuthor};
+    const linkHTML = templates.authorLink(linkHTMLData);
     html = linkHTML;
 
     if (!allAuthorsList.hasOwnProperty(articleAuthor)) {
@@ -288,7 +300,6 @@ function generateAuthors() {
     } else {
       allAuthorsList[articleAuthor]++;
     }
-    authorWrapper.innerHTML = html;
 
     authorWrapper.innerHTML = html;
   }
